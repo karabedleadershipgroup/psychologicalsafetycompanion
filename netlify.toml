@@ -1,0 +1,13 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Route the front-end's /api/analyze calls to the serverless function
+[[redirects]]
+  from = "/api/analyze"
+  to = "/.netlify/functions/analyze"
+  status = 200
+
+# Modern Node runtime for the function
+[functions]
+  node_bundler = "esbuild"
