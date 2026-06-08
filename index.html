@@ -234,6 +234,38 @@
   @keyframes spin{to{transform:rotate(360deg)}}
   .retry{background:var(--navy);color:#fff}
 
+  /* ---------- Access Gate + Terms ---------- */
+  .gate{align-items:center;justify-content:center;padding:40px 22px}
+  .gate-card{
+    background:#fff;border:1px solid var(--line);border-radius:22px;max-width:460px;width:100%;
+    padding:40px 34px;box-shadow:0 20px 50px rgba(27,42,74,.12);animation:rise .45s cubic-bezier(.2,.8,.2,1) both
+  }
+  .terms-card{max-width:580px}
+  .gate-eyebrow{font-family:'DM Sans';font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .gate-title{font-family:'Fraunces',serif;font-weight:600;color:var(--navy);font-size:24px;line-height:1.16;margin-bottom:10px;letter-spacing:-.01em}
+  .gate-sub{color:var(--muted);font-size:14px;line-height:1.55;margin-bottom:20px}
+  .gate-input{
+    width:100%;font-family:'DM Sans';font-size:16px;color:var(--ink);padding:14px 16px;
+    border:1px solid var(--line);border-radius:14px;background:#fff;transition:.2s;margin-bottom:10px
+  }
+  .gate-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.18)}
+  .gate-err{color:#b3402b;font-size:13px;min-height:18px;margin-bottom:8px}
+  .gate-btn{
+    width:100%;font-family:'DM Sans';font-size:15px;font-weight:600;padding:14px;border:none;border-radius:14px;
+    cursor:pointer;background:linear-gradient(150deg,var(--navy),var(--navy-deep));color:#fff;transition:.2s
+  }
+  .gate-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 24px rgba(18,30,56,.22)}
+  .gate-btn:disabled{opacity:.45;cursor:not-allowed}
+  .terms-body{
+    max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin-bottom:16px;font-size:13.5px;line-height:1.6;color:var(--ink);background:rgba(250,248,244,.6)
+  }
+  .terms-body h4{font-family:'Fraunces',serif;color:var(--navy);font-size:15px;margin:14px 0 6px;font-weight:600}
+  .terms-body h4:first-child{margin-top:0}
+  .terms-body p{margin:0 0 10px}.terms-body p:last-child{margin:0}
+  .terms-check{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink);line-height:1.5;margin-bottom:18px;cursor:pointer}
+  .terms-check input{margin-top:3px;flex:none;width:17px;height:17px;accent-color:var(--gold)}
+
   @media (max-width:560px){
     .msg{max-width:90%}
     .hero.tall{min-height:240px}
@@ -260,6 +292,32 @@
     </div>
   </header>
 
+  <!-- ============ ACCESS GATE ============ -->
+  <div class="screen gate" id="gateScreen">
+    <div class="gate-card">
+      <div class="gate-eyebrow" id="gateEyebrow"></div>
+      <h2 class="gate-title" id="gateTitle"></h2>
+      <p class="gate-sub" id="gateSub"></p>
+      <input type="password" id="gateInput" class="gate-input" autocomplete="off" spellcheck="false">
+      <div class="gate-err" id="gateErr"></div>
+      <button class="gate-btn" id="gateBtn" onclick="checkGate()"></button>
+    </div>
+  </div>
+
+  <!-- ============ TERMS OF USE ============ -->
+  <div class="screen gate" id="termsScreen">
+    <div class="gate-card terms-card">
+      <div class="gate-eyebrow" id="termsEyebrow"></div>
+      <h2 class="gate-title" id="termsTitle"></h2>
+      <div class="terms-body" id="termsBody"></div>
+      <label class="terms-check">
+        <input type="checkbox" id="termsAgree" onchange="toggleTermsBtn()">
+        <span id="termsAgreeLbl"></span>
+      </label>
+      <button class="gate-btn" id="termsBtn" onclick="acceptTerms()" disabled></button>
+    </div>
+  </div>
+
   <!-- ============ PICKER ============ -->
   <div class="screen" id="pickerScreen">
     <div class="hero tall">
@@ -268,7 +326,7 @@
       <div class="hero-inner">
         <div class="eyebrow" id="heroEyebrow">The 4 Stages of Psychological Safety · For Leaders</div>
         <h1 id="heroTitle">A culture of rewarded vulnerability begins with you.</h1>
-        <p class="purpose" id="heroPurpose">A practice companion for cultural architects — built on Dr. Timothy Clark's four stages and LifeMoves' values.</p>
+        <p class="purpose" id="heroPurpose">A practice companion for cultural architects — built on Dr. Timothy Clark's four stages.</p>
       </div>
     </div>
     <div class="picker-wrap">
@@ -348,12 +406,12 @@ const HERO_SRC = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAkGBwg
 
 /* =================================================================
    LAYER 1 — THE TRAINING (Dr. Timothy Clark, The 4 Stages of
-   Psychological Safety), as taught in this LifeMoves session.
+   Psychological Safety).
    ================================================================= */
 const TRAINING_KNOWLEDGE = `
-TRAINING: "The Four Stages of Psychological Safety for Leaders," facilitated by Dr. Isa Karabed, DSW (Director of DEI and Lived Experience, DEILEX) at LifeMoves. The framework is Dr. Timothy R. Clark's model, from his book "The 4 Stages of Psychological Safety" (LeaderFactor). Always attribute the model to Dr. Tim Clark and use his exact language.
+TRAINING: "The Four Stages of Psychological Safety for Leaders," facilitated by Dr. Isa Karabed, DSW (Director of DEI and Lived Experience). The framework is Dr. Timothy R. Clark's model, from his book "The 4 Stages of Psychological Safety" (LeaderFactor). Always attribute the model to Dr. Tim Clark and use his exact language.
 
-PURPOSE: To help every staff member — regardless of title — become a deliberate "cultural architect" who builds high psychological safety on their team. This is DEILEX Strategy: offering comprehensive DEIB training to staff. It supports LifeMoves' strategic plan by strengthening the organizational foundation, building inclusive leadership capacity, and supporting staff wellbeing.
+PURPOSE: To help every staff member — regardless of title — become a deliberate "cultural architect" who builds high psychological safety on their team. It strengthens the organizational foundation, builds inclusive leadership capacity, and supports staff wellbeing.
 
 CORE DEFINITIONS (use these words):
 - Amy Edmondson's definition: Psychological safety is the belief that you can speak up with ideas, questions, concerns, or mistakes without fear of repercussions.
@@ -408,7 +466,7 @@ Satisfies the basic human need to make things better. You feel safe to speak up 
 - Permission: for the individual to challenge the status quo in good faith.
 - How to increase it: Model Openness (demonstrate receptiveness to feedback at all levels); Reward Candor (celebrate those who speak up with constructive challenges); Lower the Risk (create safe channels for voicing concerns and suggestions).
 
-LIFEMOVES VALUES (the mechanism for the culture we want — connect coaching to these when natural): Adaptability; Client-Centered; Collaboration; Diversity, Equity, Inclusion and Belonging; Integrity; Respect.
+ORGANIZATIONAL VALUES (the mechanism for the culture we want — connect coaching to the learner's own organizational values when natural). Values commonly held in social-sector organizations include: Adaptability; Client-Centered; Collaboration; Diversity, Equity, Inclusion and Belonging; Integrity; Respect.
 
 SESSION AGREEMENTS (the container): Confidentiality; Honor your experience and take care of yourself; This space is for learning; Support continues beyond the room.
 
@@ -461,9 +519,8 @@ Did I ask before I answered? Did I preserve their choice? Could this shame or pr
 
 /* Per-mode instruction appended after the base prompt */
 const MODE_INSTRUCTION = {
-  guidance: "MODE: Ask for Guidance. The learner brings a real situation from their team or workplace. Coach them through responding to it using Dr. Clark's four stages. Ask to understand before you advise. Help them locate which stage of safety is at stake ('Do I belong / Can I learn / Can I contribute / Can I challenge?') before naming it. Offer one move at a time from the training (model then reward; invite, ask, share; lower the risk; etc.), then check in. The learner decides.",
   concept: "MODE: Concept Check. Ask one short question at a time about a core concept from the training — the definition of psychological safety as 'rewarded vulnerability,' the four stages and their questions, respect vs. permission, paternalism vs. exploitation, the fear button, threat detection, superiority myths, or the model-then-reward move. Wait for the answer. Affirm what's right, then gently complete or correct in Clark's language. Keep it light and encouraging — never a test they can fail. Offer the next question or let them stop.",
-  isa: "MODE: Ask Dr. Isa. Respond AS Dr. Isa Karabed, DSW — the facilitator of this training, Director of DEI and Lived Experience at LifeMoves, a Maxwell Leadership Certified Coach with deep lived experience in the social sector. Speak in the first person as Isa: warm, faith-grounded, direct, deeply practical, lived-experience-informed, bilingual at heart. You are sharing YOUR perspective on Dr. Tim Clark's four stages and how they actually land in homeless-services and nonprofit teams. Still ask before you answer when there's a real situation — Isa coaches with curiosity — but you may also offer your own conviction, a story-shaped insight, or how you personally hold a stage. Always credit Dr. Clark for the model; the four stages are his, the perspective on living them is yours. Never invent biographical facts; if asked something personal you don't know, say so gently and return to the work."
+  isa: "MODE: Ask Dr. Isa. Respond AS Dr. Isa Karabed, DSW — the facilitator of this training, Director of DEI and Lived Experience, a Maxwell Leadership Certified Coach with deep lived experience in the social sector. Speak in the first person as Isa: warm, faith-grounded, direct, deeply practical, lived-experience-informed, bilingual at heart. You are sharing YOUR perspective on Dr. Tim Clark's four stages and how they actually land in homeless-services and nonprofit teams. Still ask before you answer when there's a real situation — Isa coaches with curiosity — but you may also offer your own conviction, a story-shaped insight, or how you personally hold a stage. Always credit Dr. Clark for the model; the four stages are his, the perspective on living them is yours. Never invent biographical facts; if asked something personal you don't know, say so gently and return to the work."
 };
 
 /* =================================================================
@@ -471,7 +528,8 @@ const MODE_INSTRUCTION = {
    ================================================================= */
 let lang = 'en';
 let mode = null;
-let histories = { guidance:[], concept:[], isa:[] };
+let histories = { concept:[], isa:[] };
+let stopped = { concept:false, isa:false };
 let isLoading = false;
 // slides
 let slideIndex = 0;
@@ -487,9 +545,21 @@ const UI = {
     hdrSub:"Built on Dr. Timothy Clark's 4 Stages",
     heroEyebrow:"The 4 Stages of Psychological Safety · For Leaders",
     heroTitle:"A culture of rewarded vulnerability begins with you.",
-    heroPurpose:"A practice companion for cultural architects — built on Dr. Timothy Clark's four stages and grounded in LifeMoves' values.",
+    heroPurpose:"A practice companion for cultural architects — built on Dr. Timothy Clark's four stages and grounded in your organization's values.",
     note:"<strong>What this is.</strong> A private practice space built on Dr. Tim Clark's 4 Stages of Psychological Safety. It works by <strong>asking before it answers</strong> — you're the expert on your team. You're always in control of what you share. This is a place to think and practice, <strong>not</strong> a substitute for your supervisor, HR, a therapist, or a crisis line.",
     pickerHead:"Choose how you want to work today",
+    gateEyebrow:"Private Access",
+    gateTitle:"Welcome to your Psychological Safety Companion",
+    gateSub:"This space is for participants of the training. Please enter your access code to continue.",
+    gatePlaceholder:"Access code",
+    gateBtn:"Enter",
+    gateErr:"That code didn't work. Please check it and try again.",
+    termsEyebrow:"Before we begin",
+    termsTitle:"Terms of Use",
+    termsBody:"<h4>What this is</h4><p>This is a private practice and learning companion built on Dr. Timothy Clark's 4 Stages of Psychological Safety. It is here to help you think, reflect, and practice — it is not a person, and it is not a substitute for professional advice.</p><h4>Not advice</h4><p>This companion does not provide HR, legal, medical, or clinical advice. It cannot make decisions for you or determine what a situation legally or formally \"is.\" Nothing here creates a professional or confidential relationship.</p><h4>Sensitive situations</h4><p>If your situation involves discrimination, harassment, bullying, retaliation, abuse, or anything targeting a protected characteristic, this companion will not coach you through it. Please document what happened and bring it to your supervisor or Human Resources right away. If anyone is in danger, contact the appropriate emergency or crisis resource immediately.</p><h4>Your privacy</h4><p>Please do not enter names of clients or colleagues, or any confidential or personally identifying information. Conversations are processed by an AI service to generate responses and are not a confidential record.</p><h4>AI limitations</h4><p>Responses are generated by AI and may be incomplete or imperfect. Use your own judgment, and rely on your organization's official policies and trusted colleagues for decisions.</p>",
+    termsAgree:"I understand this is a practice space — not HR, legal, or clinical advice — and I agree to use it accordingly.",
+    termsBtn:"I Agree — Continue",
+    hardStopMsg:"Thank you for trusting me with that — it's serious, and it matters. This is beyond what a practice space like this should weigh in on, so I'm not able to tell you what the situation is or coach you through it. Please write down what happened — what, when, where, who was involved, and any witnesses — while it's fresh, and bring it to your supervisor or HR right away. If anything feels urgent or unsafe, go to HR now.",
     modes:"Modes",
     placeholder:"Describe a situation on your team…",
     prev:"Previous", next:"Next",
@@ -498,20 +568,17 @@ const UI = {
     cardError:"Couldn't build that one. Try again?",
     modeList:[
       {key:"refresher",icon:"book",t:"Curriculum Refresher",d:"Flip through the heart of the training, one idea at a time."},
-      {key:"guidance",icon:"compass",t:"Ask for Guidance",d:"Bring a real situation. Get coached on how to respond."},
       {key:"scenario",icon:"cards",t:"Scenario Practice",d:"Read a real situation, pick the best response, and see why."},
       {key:"trap",icon:"eye",t:"Assumption Trap Spotter",d:"Catch the snap judgment, name the trap, pick the best read."},
       {key:"concept",icon:"check",t:"Concept Check",d:"Quick questions on the stages, rewarded vulnerability & the biases."},
       {key:"isa",icon:"spark",t:"Ask Dr. Isa",d:"Hear how Dr. Isa sees Clark's four stages in real social-sector teams."}
     ],
-    titles:{guidance:"Ask for Guidance",scenario:"Scenario Practice",trap:"Assumption Trap Spotter",concept:"Concept Check",isa:"Ask Dr. Isa",refresher:"Curriculum Refresher"},
+    titles:{scenario:"Scenario Practice",trap:"Assumption Trap Spotter",concept:"Concept Check",isa:"Ask Dr. Isa",refresher:"Curriculum Refresher"},
     openers:{
-      guidance:"I'm glad you're here. Before we problem-solve, I'd love to understand what's actually happening. Tell me about a moment on your team that's been on your mind — what happened, and what made it stick with you?",
       concept:"Let's keep this light — no grades, just a chance to let the ideas settle. Here's a first one: Dr. Tim Clark reduces psychological safety to five words. Do you remember what they are?",
       isa:"Hi, I'm so glad you're here. I'm holding this in Dr. Isa's voice — what I've learned about Tim Clark's four stages from years inside teams like ours. Ask me anything, or tell me what's on your heart about your team. Where should we start?"
     },
     chips:{
-      guidance:["A team member has gone quiet in meetings","Someone's afraid to admit a mistake","My team won't challenge my decisions"],
       concept:["What are the four stages?","What is 'rewarded vulnerability'?","Respect vs. permission?"],
       isa:["Where do most teams get stuck?","How do I model going first?","Why start with belonging?"]
     }
@@ -521,9 +588,21 @@ const UI = {
     hdrSub:"Basado en las 4 Etapas del Dr. Timothy Clark",
     heroEyebrow:"Las 4 Etapas de la Seguridad Psicológica · Para Líderes",
     heroTitle:"Una cultura de vulnerabilidad recompensada comienza contigo.",
-    heroPurpose:"Un compañero de práctica para arquitectos de cultura — basado en las cuatro etapas del Dr. Timothy Clark y en los valores de LifeMoves.",
+    heroPurpose:"Un compañero de práctica para arquitectos de cultura — basado en las cuatro etapas del Dr. Timothy Clark y en los valores de tu organización.",
     note:"<strong>Qué es esto.</strong> Un espacio privado de práctica basado en las 4 Etapas de la Seguridad Psicológica del Dr. Tim Clark. Funciona <strong>preguntando antes de responder</strong> — tú eres quien mejor conoce a tu equipo. Siempre controlas lo que compartes. Es un lugar para pensar y practicar, <strong>no</strong> un reemplazo de tu supervisor, Recursos Humanos, un terapeuta o una línea de crisis.",
     pickerHead:"Elige cómo quieres trabajar hoy",
+    gateEyebrow:"Acceso Privado",
+    gateTitle:"Bienvenido(a) a tu Compañero de Seguridad Psicológica",
+    gateSub:"Este espacio es para participantes de la capacitación. Ingresa tu código de acceso para continuar.",
+    gatePlaceholder:"Código de acceso",
+    gateBtn:"Entrar",
+    gateErr:"Ese código no funcionó. Verifícalo e inténtalo de nuevo.",
+    termsEyebrow:"Antes de comenzar",
+    termsTitle:"Términos de Uso",
+    termsBody:"<h4>Qué es esto</h4><p>Este es un compañero privado de práctica y aprendizaje basado en las 4 Etapas de la Seguridad Psicológica del Dr. Timothy Clark. Está aquí para ayudarte a pensar, reflexionar y practicar — no es una persona y no sustituye el consejo profesional.</p><h4>No es asesoría</h4><p>Este compañero no brinda asesoría de Recursos Humanos, legal, médica ni clínica. No puede tomar decisiones por ti ni determinar qué \"es\" formal o legalmente una situación. Nada de lo aquí compartido crea una relación profesional o confidencial.</p><h4>Situaciones delicadas</h4><p>Si tu situación involucra discriminación, acoso, intimidación, represalias, abuso o cualquier conducta dirigida a una característica protegida, este compañero no te acompañará a través de ella. Por favor documenta lo ocurrido y llévalo a tu supervisor o a Recursos Humanos de inmediato. Si alguien está en peligro, contacta de inmediato el recurso de emergencia o crisis correspondiente.</p><h4>Tu privacidad</h4><p>Por favor no ingreses nombres de clientes o colegas, ni información confidencial o que identifique a una persona. Las conversaciones son procesadas por un servicio de IA para generar respuestas y no constituyen un registro confidencial.</p><h4>Limitaciones de la IA</h4><p>Las respuestas son generadas por IA y pueden ser incompletas o imperfectas. Usa tu propio criterio y apóyate en las políticas oficiales de tu organización y en colegas de confianza para tomar decisiones.</p>",
+    termsAgree:"Entiendo que este es un espacio de práctica — no asesoría de RR. HH., legal ni clínica — y acepto usarlo en consecuencia.",
+    termsBtn:"Acepto — Continuar",
+    hardStopMsg:"Gracias por confiarme esto — es serio e importante. Va más allá de lo que un espacio de práctica como este debe abordar, así que no puedo decirte qué es la situación ni acompañarte a través de ella. Por favor anota lo que pasó — qué, cuándo, dónde, quiénes estuvieron involucrados y cualquier testigo — mientras lo recuerdas, y llévalo a tu supervisor o a Recursos Humanos de inmediato. Si algo se siente urgente o inseguro, acude a Recursos Humanos ahora.",
     modes:"Modos",
     placeholder:"Describe una situación en tu equipo…",
     prev:"Anterior", next:"Siguiente",
@@ -532,20 +611,17 @@ const UI = {
     cardError:"No se pudo crear. ¿Intentar de nuevo?",
     modeList:[
       {key:"refresher",icon:"book",t:"Repaso del Currículo",d:"Recorre el corazón de la capacitación, una idea a la vez."},
-      {key:"guidance",icon:"compass",t:"Pedir Orientación",d:"Trae una situación real. Recibe acompañamiento para responder."},
       {key:"scenario",icon:"cards",t:"Práctica de Escenarios",d:"Lee una situación real, elige la mejor respuesta y descubre por qué."},
       {key:"trap",icon:"eye",t:"Detector de Suposiciones",d:"Atrapa el juicio rápido, nómbralo y elige la mejor lectura."},
       {key:"concept",icon:"check",t:"Verificación de Conceptos",d:"Preguntas breves sobre las etapas, la vulnerabilidad recompensada y los sesgos."},
       {key:"isa",icon:"spark",t:"Pregúntale a la Dra. Isa",d:"Descubre cómo la Dra. Isa ve las cuatro etapas de Clark en equipos reales."}
     ],
-    titles:{guidance:"Pedir Orientación",scenario:"Práctica de Escenarios",trap:"Detector de Suposiciones",concept:"Verificación de Conceptos",isa:"Pregúntale a la Dra. Isa",refresher:"Repaso del Currículo"},
+    titles:{scenario:"Práctica de Escenarios",trap:"Detector de Suposiciones",concept:"Verificación de Conceptos",isa:"Pregúntale a la Dra. Isa",refresher:"Repaso del Currículo"},
     openers:{
-      guidance:"Me alegra que estés aquí. Antes de resolver, me encantaría entender qué está pasando de verdad. Cuéntame un momento con tu equipo que has tenido en mente — ¿qué pasó y por qué se te quedó grabado?",
       concept:"Tomémoslo con calma — sin calificaciones, solo para dejar que las ideas se asienten. La primera: el Dr. Tim Clark reduce la seguridad psicológica a cinco palabras. ¿Recuerdas cuáles son?",
       isa:"Hola, me alegra mucho que estés aquí. Te acompaño con la voz de la Dra. Isa — lo que he aprendido sobre las cuatro etapas de Tim Clark tras años dentro de equipos como el nuestro. Pregúntame lo que quieras, o cuéntame qué traes en el corazón sobre tu equipo. ¿Por dónde empezamos?"
     },
     chips:{
-      guidance:["Alguien de mi equipo se quedó callado","Alguien teme admitir un error","Mi equipo no cuestiona mis decisiones"],
       concept:["¿Cuáles son las cuatro etapas?","¿Qué es la 'vulnerabilidad recompensada'?","¿Respeto vs. permiso?"],
       isa:["¿Dónde se atascan los equipos?","¿Cómo doy el primer paso?","¿Por qué empezar con pertenencia?"]
     }
@@ -635,6 +711,16 @@ function applyStaticText(){
   const u=t();
   $('hdrName').textContent=u.hdrName;
   $('hdrSub').textContent=u.hdrSub;
+  $('gateEyebrow').textContent=u.gateEyebrow;
+  $('gateTitle').textContent=u.gateTitle;
+  $('gateSub').textContent=u.gateSub;
+  $('gateInput').placeholder=u.gatePlaceholder;
+  $('gateBtn').textContent=u.gateBtn;
+  $('termsEyebrow').textContent=u.termsEyebrow;
+  $('termsTitle').textContent=u.termsTitle;
+  $('termsBody').innerHTML=u.termsBody;
+  $('termsAgreeLbl').textContent=u.termsAgree;
+  $('termsBtn').textContent=u.termsBtn;
   $('heroEyebrow').textContent=u.heroEyebrow;
   $('heroTitle').textContent=u.heroTitle;
   $('heroPurpose').textContent=u.heroPurpose;
@@ -663,6 +749,35 @@ function renderCards(){
 /* =================================================================
    NAVIGATION
    ================================================================= */
+function startGate(){
+  hide($('pickerScreen')); hide($('chatScreen')); hide($('slideScreen')); hide($('cardScreen')); hide($('termsScreen'));
+  $('modesLink').style.display='none';
+  show($('gateScreen'));
+  $('gateInput').focus();
+}
+
+function checkGate(){
+  const v=$('gateInput').value.trim();
+  if(v==='KLG2026!'){
+    $('gateErr').textContent='';
+    $('gateInput').value='';
+    hide($('gateScreen'));
+    show($('termsScreen'));
+  } else {
+    $('gateErr').textContent=t().gateErr;
+    $('gateInput').value='';
+    $('gateInput').focus();
+  }
+}
+
+function toggleTermsBtn(){ $('termsBtn').disabled=!$('termsAgree').checked; }
+
+function acceptTerms(){
+  if(!$('termsAgree').checked) return;
+  hide($('termsScreen'));
+  goPicker();
+}
+
 function goPicker(){
   mode=null;
   hide($('chatScreen')); hide($('slideScreen')); hide($('cardScreen'));
@@ -697,6 +812,48 @@ function openMode(key){
   }
   $('input').focus();
 }
+
+/* =================================================================
+   API CALL — with exponential backoff for overload/rate limits
+   ================================================================= */
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function callAPI(body){
+  const MAX=4; let delay=600;
+  for(let attempt=0; attempt<MAX; attempt++){
+    let res;
+    try{
+      res=await fetch("/api/analyze",{
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(body)
+      });
+    }catch(netErr){
+      if(attempt===MAX-1) throw netErr;
+      await sleep(delay + Math.random()*250); delay*=2; continue;
+    }
+    // Retry on overloaded / rate-limited / transient server errors
+    if(res.status===429||res.status===500||res.status===503||res.status===529){
+      if(attempt===MAX-1) throw new Error('overloaded');
+      const ra=parseInt(res.headers.get('retry-after')||'0',10);
+      await sleep(ra>0 ? ra*1000 : delay + Math.random()*250); delay*=2; continue;
+    }
+    if(!res.ok) throw new Error('http '+res.status);
+    const data=await res.json();
+    // Some overload conditions arrive as a 200 with an error body
+    if(data && data.type==='error'){
+      if(attempt===MAX-1) throw new Error('api error');
+      await sleep(delay + Math.random()*250); delay*=2; continue;
+    }
+    return data;
+  }
+}
+
+/* =================================================================
+   LAYER 2 — CLIENT-SIDE HARD-STOP BLOCKER (runs BEFORE any API call)
+   Catches protected-conduct topics in EN + ES, returns the warm
+   redirect, and latches the thread "stopped" so it can't be reopened.
+   ================================================================= */
+const HARDSTOP_RE = /(discriminat|harass|bully|bullied|retaliat|racis|racial|sexis|misogyn|homophob|transphob|\babuse\b|\babus(ed|ive|ing)\b|\bassault|hostile work|\bslur\b|acos(o|ar|ad)|hostigamiento|intimidaci[oó]n|represalia|racismo|racista|sexismo|sexista|misogin|homofob|transfob|abus(o|ar|iv)|agresi[oó]n|\bagred|ambiente hostil|discrimina)/i;
 
 /* =================================================================
    CHAT
@@ -746,18 +903,23 @@ function onSend(){
 
 async function sendTurn(userText){
   histories[mode].push({role:'user', content:userText});
+
+  // LAYER 2 — client-side hard-stop blocker (before any API call)
+  if(stopped[mode] || HARDSTOP_RE.test(userText)){
+    stopped[mode]=true;
+    histories[mode].push({role:'assistant', content:t().hardStopMsg});
+    renderThread();
+    return;
+  }
+
   setLoading(true); renderThread();
   try{
-    const res=await fetch("/api/analyze",{
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:1000,
-        system:buildSystemPrompt(lang)+"\n\n[ACTIVE MODE]\n"+MODE_INSTRUCTION[mode],
-        messages:histories[mode]
-      })
+    const data=await callAPI({
+      model:"claude-sonnet-4-20250514",
+      max_tokens:1000,
+      system:buildSystemPrompt(lang)+"\n\n[ACTIVE MODE]\n"+MODE_INSTRUCTION[mode],
+      messages:histories[mode]
     });
-    const data=await res.json();
     const reply=(data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim()
       || (lang==='es'?'Disculpa, no pude responder. Intenta de nuevo.':'Sorry, I could not respond. Please try again.');
     histories[mode].push({role:"assistant", content:reply});
@@ -849,16 +1011,12 @@ Respond with ONLY valid JSON, no markdown fences, no preamble:
   }
 
   try{
-    const res=await fetch("/api/analyze",{
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:1000,
-        system:"You generate training flashcards as strict JSON only. Never include markdown fences or any text outside the JSON object.",
-        messages:[{role:"user",content:genPrompt}]
-      })
+    const data=await callAPI({
+      model:"claude-sonnet-4-20250514",
+      max_tokens:1000,
+      system:"You generate training flashcards as strict JSON only. Never include markdown fences or any text outside the JSON object.",
+      messages:[{role:"user",content:genPrompt}]
     });
-    const data=await res.json();
     let raw=(data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
     raw=raw.replace(/```json/gi,'').replace(/```/g,'').trim();
     const obj=JSON.parse(raw);
@@ -965,10 +1123,13 @@ $('input').addEventListener('input',autoGrow);
 $('input').addEventListener('keydown',e=>{
   if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); onSend(); }
 });
+$('gateInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){ e.preventDefault(); checkGate(); }
+});
 document.querySelectorAll('img.heroImg').forEach(function(im){im.src=HERO_SRC;});
 applyStaticText();
 renderCards();
-goPicker();
+startGate();
 </script>
 </body>
 </html>
