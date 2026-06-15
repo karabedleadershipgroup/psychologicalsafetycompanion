@@ -908,7 +908,7 @@ async function sendTurn(userText){
   setLoading(true); renderThread();
   try{
     const data=await callAPI({
-      model:"claude-sonnet-4-20250514",
+      model:"claude-sonnet-4-6",
       max_tokens:1000,
       system:buildSystemPrompt(lang)+"\n\n[ACTIVE MODE]\n"+MODE_INSTRUCTION[mode],
       messages:histories[mode]
@@ -1005,7 +1005,7 @@ Respond with ONLY valid JSON, no markdown fences, no preamble:
 
   try{
     const data=await callAPI({
-      model:"claude-sonnet-4-20250514",
+      model:"claude-sonnet-4-6",
       max_tokens:1000,
       system:"You generate training flashcards as strict JSON only. Never include markdown fences or any text outside the JSON object.",
       messages:[{role:"user",content:genPrompt}]
